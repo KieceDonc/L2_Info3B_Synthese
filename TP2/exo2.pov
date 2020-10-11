@@ -43,40 +43,73 @@ fleche(<0,0,0>,<0,0,10>,radiusCylinder,<0,0,15>,0,color rgb<0,1,0>) // y
 
 
 #declare n = 4;
-#declare points0 = array[n+1];
-#declare points1 = array[n+1];
+#declare face0 = array[n+1];
 #declare rayon = 5;
-#declare circle_color0 = color rgb<0,1,0>;
-#declare circle_color1 = color rgb<1,0,0>;
 #declare circle_radius = 0.5;
 
 //#for (Identifier, Start, End [, Step])
 #for (k, 0, n, 1)
 
     #local theta = k/n*2*pi;
-    #local points0[k] = <rayon*cos(theta),rayon*sin(theta),0>;
-    #local points1[k] = <rayon*cos(theta),rayon*sin(theta),0>;
+    #local face0[k] = <rayon*cos(theta),rayon*sin(theta),0>;
 
 #end // ----------- end of #for loop
 
-//#for (Identifier, Start, End [, Step])
+
+#macro constructOneFace(faceArray,faceLength,faceCircleRadius,faceTranslate,faceRotation,faceColor,faceColorWithTransparence)
+    #for (k, 0, faceLength-1, 1)
+
+        cylinder{
+            faceArray[k],
+            faceArray[k+1],
+            faceCircleRadius
+            open
+            pigment{ faceColor }
+            rotate faceRotation
+            translate faceTranslate
+        }
+        
+
+        polygon {
+            faceLength,
+            #declare loop = 0;
+            #while (loop < faceLength)
+                faceArray[loop]
+                #if (loop<faceLength-1)
+                ,
+                #end
+                #declare loop = loop + 1;
+            #end
+            rotate faceRotation
+            translate faceTranslate
+            pigment { faceColorWithTransparence }
+        }
+
+    #end // ----------- end of #for loop
+#end
+
+constructOneFace(face0,n,circle_radius,<0,0,0>,<0,0,45>, color rgb<1,0,0>,color rgbt<1,0,0,0.5>)
+constructOneFace(face0,n,circle_radius,<0,0,rayon+circle_radius*4>,<0,0,45>, color rgbf<0,1,0>,color rgbt<0,1,0,0.5>)
+constructOneFace(face0,n,circle_radius,<0,rayon/2+circle_radius*2,rayon/2+circle_radius*2>,<90,45,0>, color rgbf<0,0,1>,color rgbt<0,0,1,0.5>) // x,z,y
+constructOneFace(face0,n,circle_radius,<0,-rayon/2-circle_radius*2,rayon/2+circle_radius*2>,<90,45,0>, color rgbf<1,0,1>,color rgbt<1,0,1,0.5>) // x,z,y
+constructOneFace(face0,n,circle_radius,<-rayon/2-circle_radius*2,0,+rayon/2+circle_radius*2>,<90,45,90>, color rgbf<0,1,1>,color rgbt<0,1,1,0.5>)
+constructOneFace(face0,n,circle_radius,<rayon/2+circle_radius*2,0,+rayon/2+circle_radius*2>,<90,45,90>, color rgbf<1,1,0>,color rgbt<1,1,0,0.5>)
+/*
 #for (k, 0, n-1, 1)
 
-intersection {
     cylinder{
-        points0[k],
-        points0[k+1],
+        carre0[k],
+        carre0[k+1],
         circle_radius
         open
         pigment{ circle_color0 }
         rotate<0,0,45>
     }
     
-}
 
     cylinder{
-        points0[k],
-        points0[k+1],
+        carre0[k],
+        carre0[k+1],
         circle_radius
         open
         pigment{ circle_color1 }
@@ -85,5 +118,18 @@ intersection {
     }
 
 #end // ----------- end of #for loop
+polygon {
+    n,
+    #declare loop = 0;
+    #while (loop < n)
+        carre0[loop]
+        #if (loop<n-1)
+        ,
+        #end
+        #declare loop = loop + 1;
+    #end
+    rotate<0,0,45>
+}
+*/
 
     
