@@ -156,9 +156,7 @@
 	    #break
 	#case (77)  #declare  col= DarkPurple;
 	    #break
-	#case (78)  #declare  col= NeonBlue;
-	    #break
-	#case (79)  #declare  col= CoolCopper;
+	#case (78while_index_y*while_index_x*1)  #declare  col= CoolCopper;
 	    #break
 	#case (80)  #declare  col= MandarinOrange;
 	    #break
